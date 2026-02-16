@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resumen examen - Landing vertical</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,0.06);
+      --muted: rgba(255,255,255,0.72);
+      --faint: rgba(255,255,255,0.52);
+      --text: rgba(255,255,255,0.92);
+      --accent: #38bdf8;
+      --ok: #34d399;
+      --shadow: 0 12px 40px rgba(0,0,0,0.35);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(56,189,248,0.12), transparent 60%),
+                  radial-gradient(900px 600px at 85% 25%, rgba(167,139,250,0.10), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+    b { color: rgba(255,255,255,0.96); }
+    .wrap { position: relative; height: 100vh; width: 100vw; overflow: hidden; }
+    .slides { position: absolute; inset: 0; will-change: transform; transition: transform 420ms cubic-bezier(.2,.9,.2,1); }
+    .slide { height: 100vh; width: 100vw; padding: 28px 20px 88px; display: flex; justify-content: center; align-items: stretch; }
+    .slideContent { width: min(1100px, 100%); height: 100%; overflow: auto; padding: 6px 8px 18px; scrollbar-gutter: stable; }
+    .hero { background: linear-gradient(135deg, rgba(56,189,248,0.16), rgba(167,139,250,0.10));
+      border: 1px solid rgba(255,255,255,0.10); box-shadow: var(--shadow);
+      border-radius: var(--radius); padding: 22px 22px 18px; margin-bottom: 18px; }
+    .hero.small { padding: 18px 20px 14px; }
+    .kicker { font-size: 12px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 3.2vw, 44px); line-height: 1.1; }
+    .lead { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+    .chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip { padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18); color: rgba(255,255,255,0.86); font-size: 13px; }
+    .grid2 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 900px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+    .card { background: var(--panel); border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 16px 14px; }
+    .card h2 { margin: 0 0 10px; font-size: 16px; letter-spacing: 0.02em; }
+    .cardBody { color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .ul { margin: 8px 0 0; padding-left: 18px; }
+    .ul li { margin: 6px 0; }
+    .qcard { background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px; padding: 14px 14px 12px; margin: 12px 0; }
+    .qtitle { font-weight: 700; color: rgba(255,255,255,0.94); margin-bottom: 10px; line-height: 1.35; }
+    .qnum { color: var(--accent); margin-right: 6px; }
+    .opts { display: grid; gap: 8px; }
+    .opt { display: flex; gap: 10px; align-items: flex-start; color: rgba(255,255,255,0.80); }
+    .badge { min-width: 26px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 999px; background: rgba(56,189,248,0.18); border: 1px solid rgba(56,189,248,0.35);
+      color: rgba(255,255,255,0.92); font-size: 12px; font-weight: 700; margin-top: 1px; }
+    .source { margin-top: 6px; color: var(--faint); font-size: 12px; }
+    .source span { color: rgba(255,255,255,0.76); background: rgba(0,0,0,0.16);
+      border: 1px solid rgba(255,255,255,0.10); padding: 2px 8px; border-radius: 999px; margin-left: 8px; }
+    .qa .q, .qa .a { background: rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px; padding: 12px 12px 10px; margin: 10px 0 0; color: rgba(255,255,255,0.82);
+      line-height: 1.55; }
+    .qa .a b { color: var(--ok); }
+    .details { margin: 14px 0; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .details summary { cursor: pointer; padding: 12px 14px; color: rgba(255,255,255,0.88);
+      font-weight: 700; list-style: none; outline: none; }
+    .details summary::-webkit-details-marker { display: none; }
+    .details[open] summary { border-bottom: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.18); }
+    .code { margin: 0; padding: 14px; overflow: auto; color: rgba(255,255,255,0.86);
+      background: rgba(0,0,0,0.35); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-size: 12.5px; line-height: 1.5; }
+    .note { margin-top: 12px; padding: 12px 14px; border-radius: 14px;
+      background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.26); color: rgba(255,255,255,0.84); }
+    .hud { position: fixed; left: 14px; right: 14px; top: 12px; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none; }
+    .hud .pill { pointer-events: auto; display: inline-flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.30);
+      backdrop-filter: blur(10px); box-shadow: var(--shadow); color: rgba(255,255,255,0.86); font-size: 13px; }
+    .dot { width: 8px; height: 8px; border-radius: 99px; background: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.14); }
+    .btns { position: fixed; right: 14px; bottom: 14px; display: grid; gap: 10px; z-index: 60; }
+    .navbtn { width: 46px; height: 46px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.34); color: rgba(255,255,255,0.92); box-shadow: var(--shadow); cursor: pointer; }
+    .navbtn:hover { border-color: rgba(56,189,248,0.35); }
+    .navbtn:active { transform: translateY(1px); }
+    .help { position: fixed; left: 14px; bottom: 14px; z-index: 60; pointer-events: none; color: rgba(255,255,255,0.60); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hud">
+      <div class="pill">
+        <span class="dot" id="dot"></span>
+        <span id="slideTitle">—</span>
+        <span style="opacity:.55">·</span>
+        <span id="slideCount">0/0</span>
+      </div>
+      <div class="pill">↑↓ cambia tema · scroll dentro</div>
+    </div>
+
+    <div class="slides" id="slides">
+
+<section class='slide' data-title='Portada'><div class='slideContent'>
+<div class="hero">
+  <div class="kicker">Europa/Madrid · 16/02/2026</div>
+  <h1>Resumen rápido del examen</h1>
+  <p class="lead">Usa <b>↑ ↓</b> (o <b>← →</b>) para cambiar de tema. Dentro de cada tema puedes hacer scroll.</p>
+  <div class="chips">
+    <span class="chip">DNS</span>
+    <span class="chip">Docker</span>
+    <span class="chip">LDAP</span>
+    <span class="chip">FTP/SFTP/SCP/NGINX</span>
+    <span class="chip">Tomcat</span>
+    <span class="chip">Node.js + MongoDB</span>
+  </div>
+</div>
+
+<div class="grid2">
+
+<div class='card'>
+  <h2>Cómo usar esto en 5 minutos</h2>
+  <div class='cardBody'><ul class='ul'><li>1 pasada rápida por DNS/Docker/LDAP (son los que traen test en tus documentos).</li><li>2ª pasada: comandos clave y diferencias (recursiva vs iterativa, VM vs contenedor, LDAP vs MySQL, FTP vs SFTP).</li><li>Antes de entregar: repasa definiciones cortas (una frase) y una lista de 5 conceptos por tema.</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>Atajos</h2>
+  <div class='cardBody'><ul class='ul'><li>↑/←: tema anterior · ↓/→: tema siguiente</li><li>Home: ir al inicio · End: ir al final</li><li>Botones abajo derecha si estás con trackpad/móvil</li></ul></div>
+</div>
+</div></div></section>
+
+<section class='slide' data-title='DNS'><div class='slideContent'>
+<div class="hero small">
+  <h1>DNS</h1>
+  <p class="lead">Sistema que resuelve nombres (dominios) a IPs y también permite resolución inversa.</p>
+</div>
+
+<div class="grid2">
+
+<div class='card'>
+  <h2>Qué tienes que clavar</h2>
+  <div class='cardBody'><ul class='ul'><li>Traduce nombres ↔ IP (resolución directa e inversa).</li><li>Jerarquía: raíz (.) → TLD → dominio → subdominios.</li><li>Consulta recursiva: el resolutor te devuelve respuesta final; iterativa: te va redirigiendo.</li><li>FQDN = nombre completo (conceptualmente termina en un punto que representa la raíz).</li><li>Servidores raíz: 13 entidades lógicas; muchas instancias distribuidas con Anycast (esto aparece en tu test).</li><li>MASTER/primario: autoridad de la zona; ahí se notifican los cambios.</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>Comandos y cosas típicas</h2>
+  <div class='cardBody'><ul class='ul'><li>nslookup dominio: consulta DNS básica.</li><li>dig/host (si lo usáis): más detalle o alternativa rápida.</li><li>Comprobar DNS local: /etc/resolv.conf o ajustes de red (según sistema).</li></ul></div>
+</div>
+
+</div>
+
+<div class='card'>
+  <h2>Pregunta de desarrollo (del documento)</h2>
+  <div class='cardBody'><div class='qa'><div class='q'><b>Enunciado:</b> Explica brevemente qué función cumple el protocolo DNS y describe la diferencia principal entre una consulta recursiva y una consulta iterativa.</div><div class='a'><b>Idea-respuesta:</b> El DNS actúa como un traductor que convierte nombres de dominio como google.es en direcciones IP como 216.58.201.163 para que podamos acceder a los servicios de Internet. Las diferencias entre consulta recursiva y iterativa es que en la recursiva el servidor DNS local está obligado a resolver la petición y entregar una respuesta definitiva al cliente preguntando a otros servidores si es necesario mientras que la iterativa devuelve la respuesta solo si la conoce y si no la sabe manda al cliente a otro servidor</div></div></div>
+</div>
+
+<div class='card'>
+  <h2>Preguntas tipo test (del documento)</h2>
+  <div class='cardBody'><div class='source'>Fuente: <span>Preguntas para el examen DNS.pdf</span></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>1.</span> ¿Para qué sirve el comando nslookup?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Para saber quién es el dueño de una página web y cuándo caduca</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Para comprobar si tengo conexión a internet enviando un paquete de datos</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Para consultar qué dirección IP le corresponde a un nombre de dominio (como instagram.com)</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Para borrar el historial de búsqueda de mi navegador</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>2.</span> ¿Cual es la función principal de Pi-Hole?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Funcionar como un servidor DNS que filtra dominios publicitarios y de rastreo</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Aumentar la velocidad física de la conexión a internet de la compañía</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Actuar como un antivirus que elimina archivos infectados del disco duro</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Sustituir por completo al router para gestionar la conexión por fibra óptica</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>3.</span> Si ves un dominio que termina en &quot;.fr&quot; o &quot;.es&quot;, ¿a qué grupo de dominios de primer nivel pertenece?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Dominios genéricos (gTLD), porque cualquier persona del mundo puede usarlos para su empresa</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Dominios patrocinados (sTLD), porque los gestiona una organización privada como una aerolínea</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Dominios de segundo nivel (SLD), porque son el nombre principal de la página web</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Dominios geográficos (ccTLD), porque están reservados para países o territorios y usan dos letras</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>4.</span> ¿Cuál de las siguientes afirmaciones sobre el FQDN (Fully Qualified Domain Name) es correcta según la jerarquía DNS?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Es un nombre de dominio incompleto que solo incluye el SLD</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Es el nombre de dominio completo y siempre debe terminar en un punto que representa al dominio raíz</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>El punto final del FQDN es obligatorio escribirlo siempre en el navegador para que la web cargue</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Un FQDN solo está formado por el subdominio y el TLD, ignorando el nombre de la marca</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>5.</span> ¿Cuál es la característica principal de un servidor DNS primario MASTER?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>No puede responder a consultas de usuarios externos.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Tiene la autoridad sobre una zona específica y en él se notifican los cambios.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Obtiene su información exclusivamente de los servidores raíz.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Su única función es almacenar respuestas en memoria para consultas rápidas.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>6.</span> En una pregunta recursiva, el servidor DNS tiene la obligación de:</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Ignorar la petición si no tiene la respuesta en su memoria caché.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Indicar al cliente a qué otro servidor debe llamar él mismo.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Preguntar solo a servidores secundarios.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Dar una respuesta definitiva al cliente.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>7.</span> ¿Cuál es la función principal del protocolo DNS en una red?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Cifrar la conexión entre el cliente y el servidor web.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Traducir nombres de dominio legibles (FQDN) a direcciones IP y viceversa.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Asignar direcciones MAC a los dispositivos conectados.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Garantizar la entrega de paquetes sin errores mediante el protocolo TCP.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>8.</span> Respecto a los servidores raíz (Root Servers) del DNS, ¿qué afirmación es CORRECTA?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Los servidores raíz almacenan la información de todas las páginas web que existen en Internet.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Utilizan direcciones IP privadas para que no puedan ser atacados desde el exterior.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Existen cientos de servidores físicos distribuidos mundialmente gracias a la tecnología Anycast, aunque se organizan en 13 entidades lógicas.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Son exactamente 13 ordenadores físicos situados en una única sala de servidores para centralizar la gestión.</span></div>
+</div></div></div>
+</div>
+</div></section>
+
+<section class='slide' data-title='Docker'><div class='slideContent'>
+<div class="hero small">
+  <h1>Docker</h1>
+  <p class="lead">Contenedores = ejecutar apps en entornos aislados y portables, sin cargar un SO completo como una VM.</p>
+</div>
+
+<div class="grid2">
+
+<div class='card'>
+  <h2>Ideas clave</h2>
+  <div class='cardBody'><ul class='ul'><li>Contenedor comparte kernel (ligero) vs VM con SO completo (pesado).</li><li>Imagen = plantilla; contenedor = instancia en ejecución.</li><li>Dockerfile construye imágenes; Compose orquesta varios servicios con YAML.</li><li>Volúmenes/bind mounts: persistencia (BBDD y datos).</li><li>Redes: DNS interno por nombre de servicio en Compose.</li><li>Ventaja típica: portabilidad y consistencia de entornos.</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>Comandos que suelen caer</h2>
+  <div class='cardBody'><ul class='ul'><li>docker ps / ps -a: contenedores.</li><li>docker images: imágenes.</li><li>docker run: crear/arrancar.</li><li>docker logs -f: logs.</li><li>docker exec -it: entrar.</li><li>docker compose up -d / down: levantar/bajar.</li></ul></div>
+</div>
+
+</div>
+
+<div class='card'>
+  <h2>Comparación rápida (lo que suelen preguntar)</h2>
+  <div class='cardBody'><ul class='ul'><li>VM: SO completo (pesado), arranque lento, aislamiento muy alto.</li><li>Contenedor: comparte kernel (ligero), arranca en segundos, gran portabilidad.</li><li>Docker Compose: varios servicios (API + BBDD + proxy) definidos en un YAML.</li></ul></div>
+</div>
+
+<details class="details">
+  <summary>Ejemplo completo: docker-compose.yml (API Node + Mongo con volumen)</summary>
+  <pre class='code' data-lang='yaml'><code>version: &quot;3.9&quot;
+services:
+  api:
+    build: .
+    ports:
+      - &quot;3000:3000&quot;
+    environment:
+      MONGO_URI: mongodb://mongo:27017/miapp
+    depends_on:
+      - mongo
+    networks:
+      - redapp
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - datos_mongo:/data/db
+    networks:
+      - redapp
+
+volumes:
+  datos_mongo:
+
+networks:
+  redapp:
+</code></pre>
+</details>
+
+<div class='card'>
+  <h2>Pregunta de desarrollo (del documento)</h2>
+  <div class='cardBody'><div class='qa'><div class='q'><b>Enunciado:</b> Explica qué es Docker, por qué surgió y menciona dos ventajas de su uso</div><div class='a'><b>Idea-respuesta:</b> Docker es una herramienta que sirve para ejecutar aplicaciones dentro de contenedores, que son entornos aislados donde va incluida la aplicación y todo lo que necesita para funcionar. Docker surgió para evitar problemas cuando una aplicación funciona en un ordenador pero no en otro por diferencias de configuración. Gracias a Docker, las aplicaciones se pueden mover y ejecutar fácilmente en cualquier equipo. Algunas de sus ventajas son que ocupa pocos recursos y que permite arrancar aplicaciones de forma rápida y sencilla.</div></div></div>
+</div>
+
+<div class='card'>
+  <h2>Preguntas tipo test (del documento)</h2>
+  <div class='cardBody'><div class='source'>Fuente: <span>GRUPO_3_ÍNDICE_Docker.docx (Anexo de preguntas)</span></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>1.</span> ¿Qué es Docker?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Un sistema operativo completo para servidores</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Una plataforma que permite crear máquinas virtuales pesadas</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Una plataforma que permite empaquetar aplicaciones y sus dependencias en contenedores</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Un lenguaje de programación para despliegue en la nube</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>2.</span> ¿Qué comando se utiliza para ver los contenedores que están en ejecución?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>docker images</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>docker run</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>docker ps</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>docker pull</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>3.</span> ¿Cuál es una ventaja de Docker?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Los contenedores no están completamente aislados como las VMs.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Empaqueta la aplicación y sus dependencias, asegurando que funcione igual en cualquier entorno.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Imágenes mal optimizadas pueden ser grandes y consumir mucho espacio y ancho de banda.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Aunque son ligeros, pueden añadir una pequeña capa de overhead.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>4.</span> ¿Cuál es la principal diferencia entre una máquina virtual y un contenedor?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Las máquinas virtuales no usan sistema operativo</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Los contenedores incluyen un sistema operativo completo</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Las máquinas virtuales usan el sistema operativo del host</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Los contenedores usan el sistema operativo del host y solo incluyen la aplicación y sus dependencias</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>5.</span> ¿Cuál de las siguientes NO es una ventaja de Docker frente a las máquinas virtuales?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Arranque en segundos</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Aislamiento total del sistema</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Muy alta probabilidad</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Uso de pocos recursos</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>6.</span> ¿Qué comando de Docker Compose se usa para iniciar los contenedores definidos en el archivo YAML?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>docker compose run</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>docker compose deploy</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>docker compose start</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>docker compose up -d</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>7.</span> ¿Qué son las imágenes en Docker?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Paquetes ligeros independientes y ejecutables.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Plantillas de solo lectura con texto plano.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Instrucciones detalladas.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Archivos que permiten actualizar o borrar contenedores.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>8.</span> ¿Para qué casos reales se usa Docker?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Arquitectura de Microservicios.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Manejo de código fuente y gestiones de empresa.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Modernización de Aplicaciones.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>La A y C son correctas.</span></div>
+</div></div></div>
+</div>
+</div></section>
+
+<section class='slide' data-title='LDAP'><div class='slideContent'>
+<div class="hero small">
+  <h1>LDAP</h1>
+  <p class="lead">Servicio de directorio para centralizar usuarios/grupos y autenticación; estructura en árbol (DIT).</p>
+</div>
+
+<div class="grid2">
+
+<div class='card'>
+  <h2>Lo importante</h2>
+  <div class='cardBody'><ul class='ul'><li>LDAP es directorio (no BBDD relacional): optimizado para lecturas/búsquedas.</li><li>Estructura en árbol (DIT): base DN → OU → entradas.</li><li>Entrada = atributos (cn, sn, mail, uid...).</li><li>DN = ruta única completa dentro del árbol.</li><li>Autenticación típica: BIND (si conecta, contraseña válida).</li><li>OpenLDAP: servidor muy usado; herramientas visuales ayudan con el árbol.</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>Herramientas / comandos típicos</h2>
+  <div class='cardBody'><ul class='ul'><li>Apache Directory Studio: gestión visual.</li><li>ldapsearch / LDIF (si lo dais): buscar/importar/exportar.</li><li>Puertos típicos: 389 (LDAP), 636 (LDAPS) si os lo han explicado.</li></ul></div>
+</div>
+
+</div>
+
+<div class='card'>
+  <h2>Diferencia LDAP vs MySQL (idea corta)</h2>
+  <div class='cardBody'><ul class='ul'><li>LDAP: árbol jerárquico, lecturas y búsquedas muy rápidas, ideal para autenticación/usuarios.</li><li>MySQL (relacional): tablas, transacciones y escrituras constantes, ideal para datos de negocio (pedidos, facturas...).</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>Pregunta de desarrollo (del documento)</h2>
+  <div class='cardBody'><div class='qa'><div class='q'><b>Enunciado:</b> ¿Cuáles son las diferencias principales entre una base de datos normal (como MySQL) y un directorio LDAP?</div><div class='a'><b>Idea-respuesta:</b> . LDAP organiza los datos en forma de árbol jerárquico (con ramas y hojas) y las Bases de Datos Relacionales organizan los datos en tablas planas (filas y columnas). En cuanto a velocidad LDAP está diseñado para ser extremadamente rápido en lecturas (verificar usuarios muchas veces) y Las Bases de Datos Relacionales son mejores para escrituras constantes y transacciones complejas.</div></div></div>
+</div>
+
+<div class='card'>
+  <h2>Preguntas tipo test (del documento)</h2>
+  <div class='cardBody'><div class='source'>Fuente: <span>LDAP.docx (Anexo: Preguntas LDAP)</span></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>1.</span> ¿Cuál es la gran ventaja de usar LDAP en una empresa?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Que todos los empleados usan la misma contraseña.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Que permite usar una sola contraseña para entrar a todas las aplicaciones.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Que hace copias de seguridad.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Que borra los datos automáticamente cada día.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>2.</span> Imagina la estructura de LDAP. ¿A qué se parece visualmente?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>A una hoja de cálculo de Excel (filas y columnas).</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>A una caja desordenada.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>A un árbol invertido (con una raíz arriba y ramas hacia abajo).</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>A un documento de Word plano.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>3.</span> ¿En qué es mejor LDAP comparado con una base de datos normal?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Es el más rápido leyendo datos (verificando usuarios muchas veces).</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Es el mejor guardando compras y transacciones bancarias.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Es el mejor editando vídeos.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Es el mejor escribiendo y modificando datos constantemente.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>4.</span> ¿Qué es OpenLDAP?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Un virus informático.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Una marca de ordenadores.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>El programa servidor gratuito más famoso para usar este protocolo.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Una red social para empleados.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>5.</span> Si queremos buscar a un usuario exacto dentro del árbol LDAP, usamos su DN (Distinguished Name). ¿Qué es el DN?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Es su apodo o mote.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Es su número de teléfono.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Es su ruta única y completa dentro del sistema.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Es su clave primaria.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>6.</span> ¿Qué se guarda dentro de una &quot;Entrada&quot; de usuario en LDAP?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Atributos sencillos como: email, nombre, teléfono y contraseña.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Las acciones que realiza.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Todos los usuarios de su mismo rango.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>El dominio al que pertenece.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>7.</span> Cuando pones tu contraseña en una web que usa LDAP, ¿cómo sabe el sistema si es correcta?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>El sistema intenta conectarse (hacer login) con esa contraseña; si le deja entrar, es correcta.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>El sistema te envía un correo para preguntarte.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>El sistema lee lo que has puesto.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>El sistema descarga un archivo y lo revisa manualmente.</span></div>
+</div></div>
+<div class='qcard'>
+<div class='qtitle'><span class='qnum'>8.</span> ¿Por qué usamos herramientas visuales (como Apache Directory Studio) en lugar de solo pantallas de texto?</div>
+<div class='opts'>
+<div class='opt'><span class='badge'>A</span><span class='opttext'>Porque es necesario su uso.</span></div>
+<div class='opt'><span class='badge'>B</span><span class='opttext'>Porque así es más fácil ver y entender la estructura de árbol sin cometer errores.</span></div>
+<div class='opt'><span class='badge'>C</span><span class='opttext'>Es mejor usar la terminal.</span></div>
+<div class='opt'><span class='badge'>D</span><span class='opttext'>Porque las empresas lo demandan.</span></div>
+</div></div></div>
+</div>
+</div></section>
+
+<section class='slide' data-title='FTP/SFTP/SCP/NGINX'><div class='slideContent'>
+<div class="hero small">
+  <h1>FTP · SFTP · SCP · NGINX</h1>
+  <p class="lead">Transferencia de archivos + servidor/reverse proxy. Ojo con diferencias de seguridad y puertos.</p>
+</div>
+
+<div class="grid2">
+
+<div class='card'>
+  <h2>Conceptos que suelen caer</h2>
+  <div class='cardBody'><ul class='ul'><li>FTP transfiere archivos pero es inseguro si va en plano.</li><li>Activo vs pasivo: cambia quién abre el canal de datos y la negociación de puertos.</li><li>FTPS = FTP + TLS; SFTP/SCP van sobre SSH (lo habitual hoy).</li><li>SFTP no es &#x27;FTP cifrado&#x27;: es un protocolo distinto sobre SSH.</li><li>Cuotas y tipos de usuario: control de espacio y permisos.</li><li>NGINX: servidor web/reverse proxy para exponer servicios y servir estáticos.</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>Comandos/config que te salva</h2>
+  <div class='cardBody'><ul class='ul'><li>sftp usuario@host (SSH 22).</li><li>scp archivo usuario@host:/ruta.</li><li>nginx -t y systemctl reload nginx.</li><li>Logs: /var/log/nginx/access.log y error.log.</li></ul></div>
+</div>
+
+</div>
+
+<details class="details">
+  <summary>Ejemplo completo: NGINX como reverse proxy hacia una API</summary>
+  <pre class='code' data-lang='nginx'><code>server {
+  listen 80;
+  server_name ejemplo.local;
+
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+</code></pre>
+</details>
+
+<div class="note"><b>Nota:</b> En tus documentos subidos sobre este tema no aparece una batería de preguntas tipo test; es contenido teórico.</div>
+</div></section>
+
+<section class='slide' data-title='Tomcat'><div class='slideContent'>
+<div class="hero small">
+  <h1>Apache Tomcat</h1>
+  <p class="lead">Servidor de aplicaciones Java (contenedor de Servlets/JSP). Muy típico: carpetas, WAR y puertos.</p>
+</div>
+
+<div class="grid2">
+
+<div class='card'>
+  <h2>Puntos clave</h2>
+  <div class='cardBody'><ul class='ul'><li>Tomcat = contenedor de Servlets/JSP (apps Java web).</li><li>Servidor web (estático) vs contenedor de servlets (dinámico Java).</li><li>JSP se compila a servlet; servlet maneja HTTP.</li><li>Despliegue: .war en webapps.</li><li>Carpetas típicas: bin, conf, lib, logs, webapps, work, temp.</li><li>server.xml: conectores/puertos.</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>Qué repasar rápido</h2>
+  <div class='cardBody'><ul class='ul'><li>Puerto típico: 8080.</li><li>startup/shutdown (bin).</li><li>catalina.out / logs/.</li></ul></div>
+</div>
+
+</div>
+
+<details class="details">
+  <summary>Mini-esquema de un .war (por qué preguntan /WEB-INF)</summary>
+  <pre class='code' data-lang='text'><code>/
+├─ index.jsp (o HTML)
+├─ assets/ (css/js/img)
+├─ WEB-INF/   (privado, no accesible desde navegador)
+│  ├─ web.xml
+│  ├─ classes/ (clases .class)
+│  └─ lib/     (JARs)
+└─ META-INF/ (manifest y metadatos)
+</code></pre>
+</details>
+
+<div class="note"><b>Nota:</b> En tus documentos de Tomcat no hay preguntas tipo test cerradas; es teoría. Aquí tienes lo más preguntable resumido.</div>
+</div></section>
+
+<section class='slide' data-title='Node.js + MongoDB'><div class='slideContent'>
+<div class="hero small">
+  <h1>Node.js + MongoDB</h1>
+  <p class="lead">Backend en JavaScript + base de datos documental. Lo típico: asíncrono, Express, CRUD y documentos/colecciones.</p>
+</div>
+
+<div class="grid2">
+
+<div class='card'>
+  <h2>Node.js: lo importante</h2>
+  <div class='cardBody'><ul class='ul'><li>Node.js = runtime de JS en servidor (V8), asíncrono y por eventos.</li><li>Event Loop: I/O no bloqueante.</li><li>npm: paquetes; package.json.</li><li>Express: rutas/middlewares para API REST.</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>MongoDB: lo importante</h2>
+  <div class='cardBody'><ul class='ul'><li>MongoDB: NoSQL documental (colecciones/documentos JSON/BSON).</li><li>Mongoose: ODM con modelos y validación.</li></ul></div>
+</div>
+
+</div>
+
+<div class='card'>
+  <h2>Checklist de examen</h2>
+  <div class='cardBody'><ul class='ul'><li>Node no es lenguaje ni framework: es runtime.</li><li>Asíncrono/eventos: I/O no bloqueante (Event Loop).</li><li>API REST: rutas (GET/POST/PUT/DELETE), middlewares, JSON.</li><li>Mongo: documentos (JSON/BSON) en colecciones; ObjectId; índices si hay búsquedas.</li><li>Mongoose: esquema/modelo + validación.</li></ul></div>
+</div>
+
+<details class="details">
+  <summary>Ejemplo completo: API Express + Mongoose (CRUD mínimo)</summary>
+  <pre class='code' data-lang='js'><code>// server.js
+const express = require(&quot;express&quot;);
+const mongoose = require(&quot;mongoose&quot;);
+
+const app = express();
+app.use(express.json());
+
+mongoose.connect(process.env.MONGO_URI);
+
+const UsuarioSchema = new mongoose.Schema({
+  nombre: { type: String, required: true },
+  email:  { type: String, required: true, unique: true },
+}, { timestamps: true });
+
+const Usuario = mongoose.model(&quot;Usuario&quot;, UsuarioSchema);
+
+app.post(&quot;/usuarios&quot;, async (req, res) =&gt; {
+  const u = await Usuario.create(req.body);
+  res.status(201).json(u);
+});
+
+app.get(&quot;/usuarios&quot;, async (req, res) =&gt; {
+  const lista = await Usuario.find().sort({ createdAt: -1 });
+  res.json(lista);
+});
+
+app.listen(3000, () =&gt; console.log(&quot;API en :3000&quot;));
+</code></pre>
+</details>
+
+<div class="note"><b>Nota:</b> En tus documentos de Node/Mongo no hay preguntas tipo test cerradas; es contenido teórico.</div>
+</div></section>
+
+<section class='slide' data-title='Cierre'><div class='slideContent'>
+<div class="hero small">
+  <h1>Último repaso (2 minutos)</h1>
+  <p class="lead">Si solo te da tiempo a una cosa: memoriza <b>diferencias</b> + <b>comandos</b>.</p>
+</div>
+
+<div class="grid2">
+
+<div class='card'>
+  <h2>Diferencias que suelen caer</h2>
+  <div class='cardBody'><ul class='ul'><li>DNS: recursiva (me das respuesta final) vs iterativa (me rediriges).</li><li>Docker: imagen (plantilla) vs contenedor (instancia). Contenedor vs VM.</li><li>LDAP: directorio en árbol (lecturas/autenticación) vs MySQL (tablas/transacciones).</li><li>FTP vs SFTP: FTP no cifra; SFTP va sobre SSH.</li><li>Tomcat: contenedor de servlets/JSP; WAR en webapps.</li></ul></div>
+</div>
+
+<div class='card'>
+  <h2>Comandos-relámpago</h2>
+  <div class='cardBody'><ul class='ul'><li>DNS: nslookup (y si lo usáis: dig, host).</li><li>Docker: docker ps / images / logs / exec, docker compose up -d.</li><li>NGINX: nginx -t, systemctl reload nginx.</li><li>SFTP/SCP: sftp, scp.</li></ul></div>
+</div>
+
+</div>
+
+<div class="note"><b>Consejo de examen:</b> cuando dudes, escribe una definición de 1 frase y luego 3 bullets. Sube nota aunque no esté perfecto.</div>
+</div></section>
+
+    </div>
+
+    <div class="btns">
+      <button class="navbtn" id="btnPrev" aria-label="Anterior">↑</button>
+      <button class="navbtn" id="btnNext" aria-label="Siguiente">↓</button>
+    </div>
+
+    <div class="help">Home/End · ←→ también sirven</div>
+  </div>
+
+  <script>
+    (function () {
+      const slidesEl = document.getElementById("slides");
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const titleEl = document.getElementById("slideTitle");
+      const countEl = document.getElementById("slideCount");
+      const dotEl = document.getElementById("dot");
+
+      let idx = 0;
+
+      function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+      function setHeights() {
+        const h = window.innerHeight;
+        slides.forEach(s => s.style.height = h + "px");
+        go(idx, true);
+      }
+
+      function go(nextIdx, instant=false) {
+        idx = clamp(nextIdx, 0, slides.length - 1);
+        slidesEl.style.transitionDuration = instant ? "0ms" : "420ms";
+        slidesEl.style.transform = "translateY(-" + (idx * window.innerHeight) + "px)";
+        const t = slides[idx].dataset.title || ("Tema " + (idx+1));
+        titleEl.textContent = t;
+        countEl.textContent = (idx+1) + "/" + slides.length;
+        dotEl.style.background = "var(--accent)";
+        dotEl.style.borderColor = "rgba(56,189,248,0.5)";
+        const sc = slides[idx].querySelector(".slideContent");
+        if (sc) sc.scrollTop = 0;
+      }
+
+      function prev() { go(idx - 1); }
+      function next() { go(idx + 1); }
+
+      document.getElementById("btnPrev").addEventListener("click", prev);
+      document.getElementById("btnNext").addEventListener("click", next);
+
+      window.addEventListener("resize", setHeights);
+
+      window.addEventListener("keydown", (e) => {
+        const k = e.key;
+        if (k === "ArrowDown" || k === "ArrowRight" || k === "PageDown") { e.preventDefault(); next(); }
+        else if (k === "ArrowUp" || k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); prev(); }
+        else if (k === "Home") { e.preventDefault(); go(0); }
+        else if (k === "End") { e.preventDefault(); go(slides.length - 1); }
+      }, { passive: false });
+
+      // simple swipe (mobile)
+      let startY = null;
+      window.addEventListener("touchstart", (e) => {
+        if (!e.touches || e.touches.length !== 1) return;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+
+      window.addEventListener("touchend", (e) => {
+        if (startY === null) return;
+        const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : startY;
+        const dy = endY - startY;
+        startY = null;
+        if (Math.abs(dy) < 60) return;
+        if (dy < 0) next(); else prev();
+      }, { passive: true });
+
+      setHeights();
+      go(0, true);
+    })();
+  </script>
+</body>
+</html>
